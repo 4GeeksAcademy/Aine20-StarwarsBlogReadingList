@@ -1,0 +1,14 @@
+.testimonial-group > .row {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .testimonial-group > .characters > .col-4 {
+    display: inline-block;
+    height: 450px;
+  }
+  
+  .testimonial-group > .planets > .col-4 {
+    display: inline-block;
+    height: 410px;
+  }

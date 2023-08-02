@@ -1,42 +1,43 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			favorites: { name: [], link: [] },
+			characters: [],
+			planets: []
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+			addFavorite: (name, sel, id, icon) => {
+				if (getStore().favorites.name.includes(name)) {
+				} else {
+					setStore({
+						favorites: {
+							name: [...getStore().favorites.name, name],
+							link: [...getStore().favorites.link, [sel, id, icon]]
+						}
+					});
+				}
 			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
-
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
+			removeFavorite: fav => {
+				const id = getStore().favorites.name.indexOf(fav);
+				const newFav = getStore().favorites.name.filter(value => {
+					return value !== fav;
 				});
-
-				//reset the global store
-				setStore({ demo: demo });
+				const newLink = getStore().favorites.link.filter((value, index) => {
+					return index !== id;
+				});
+				setStore({ favorites: { name: newFav, link: newLink } });
+			},
+			loadData: () => {
+				fetch(`https://swapi.dev/api/people/`)
+					.then(res1 => res1.json())
+					.then(data1 => {
+						setStore({ characters: data1.results });
+					});
+				fetch(`https://swapi.dev/api/planets/`)
+					.then(res2 => res2.json())
+					.then(data2 => {
+						setStore({ planets: data2.results });
+					});
 			}
 		}
 	};
